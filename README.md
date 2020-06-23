@@ -1,6 +1,6 @@
-# Performance Test with Apache JMeter
+# Performance tests with Apache JMeter
 
-Performance tests with Apache JMeter are performed to test the behavior of services provided by the **Orion Linked Data (LD) context broker**.
+This python script help to measure performance of any REST application using Apache JMeter tool
 
 ## How to make the test
 
