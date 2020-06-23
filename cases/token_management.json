@@ -1,0 +1,19 @@
+{
+    "NUM_OF_THREADS": 1,
+    "LOOPS": 5,
+    "RAMP_TIME": 1,
+    "DOMAIN_IP": "localhost",
+    "PORT": 8080,
+    "PATH_SERVICE": "/sgeol-dm/security/auth/login/token/management",
+    "HTTP_VERB": "POST",
+    "HEADERS": {
+        "Content-Type": "application/json",
+        "client-id": "app_devboard"
+    },
+    "BODY_DATA": {
+        "json": {
+            "name": "gerente_app_devboard@test.com",
+            "password": "1234"
+        }
+    }
+}
