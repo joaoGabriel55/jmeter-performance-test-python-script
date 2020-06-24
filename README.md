@@ -20,7 +20,7 @@ source .bashrc
 ```
 
 - In another machine, with Linux OS, install the Orion LD broker
-- Install the [Plugins Manager](https://jmeter-plugins.org/install/Install/) on Apache JMeter;
+- Install the [Plugins Manager](https://jmeter-plugins.org/install/Install/) on Apache JMeter and put it into lib/ext directory, then restart JMeter;
 - Install the plugin: *jpgc - Standard Set*, which will allow to use graph generators listeners, about:
   * Transactions per seconds,
   * Performance metrics,
