@@ -21,7 +21,7 @@ GENERATE_ONLY_CSV_FILE = 2
 ONLY_RESULTS = 3
 
 HTTP_VERBS = ['GET', 'POST', 'PATCH', 'DELETE', 'PUT']
-# Change the parameters =======================================
+# Parameters ==================================================
 NUM_OF_THREADS = 1
 LOOPS = 2
 RAMP_TIME = 1
@@ -31,6 +31,7 @@ PATH_SERVICE = ''
 HEADERS = {}
 HTTP_VERB = ""
 BODY_DATA = ""
+PERFORMANCE_METRICS = {}
 
 OUTPUT_FILE_NAME = ''
 # =============================================================
@@ -67,12 +68,16 @@ def loadParamsFromFileSelected(file):
             if readData["HEADERS"]:
                 global HEADERS
                 HEADERS = readData["HEADERS"]
-            if readData["BODY_DATA"]:
+            if "BODY_DATA" in readData:
                 global BODY_DATA
                 if "raw" in readData["BODY_DATA"] and "json" not in readData["BODY_DATA"]:
                     BODY_DATA = str(readData["BODY_DATA"]["raw"])
                 if "raw" not in readData["BODY_DATA"] and "json" in readData["BODY_DATA"]:
-                    BODY_DATA = str(readData["BODY_DATA"]["json"])
+                    BODY_DATA = str(
+                        readData["BODY_DATA"]["json"]).replace("'", "\"")
+            if "PERFORMANCE_METRICS" in readData:
+               global PERFORMANCE_METRICS
+               PERFORMANCE_METRICS = readData["PERFORMANCE_METRICS"]
 
             global OUTPUT_FILE_NAME
             OUTPUT_FILE_NAME = "{title}_{timeNow}".format(
@@ -129,6 +134,14 @@ def defineParams(tree, op):
             for key, value in HEADERS.items():
                 header = setHeaders(key, value)
                 item.append(header)
+        if PERFORMANCE_METRICS != {} and item.attrib['name'] == 'samplers':
+            for coll in item.iter('collectionProp'):
+                if coll.attrib['name'] == 'cpu':
+                    list(coll)[1].text = PERFORMANCE_METRICS["host"]
+                    list(coll)[2].text = str(PERFORMANCE_METRICS["port"])
+                    list(coll)[3].text = PERFORMANCE_METRICS["username"]
+                    list(coll)[4].text = PERFORMANCE_METRICS["private_key"]
+                    list(coll)[5].text = PERFORMANCE_METRICS["password"]
 
     for item in root.iter('stringProp'):
         if item.attrib['name'] == "ThreadGroup.num_threads":
