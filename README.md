@@ -78,15 +78,38 @@ The test script has been developed in the Python programming language. The param
 
 ### Use performance metrics 
 
-Add in your test case JSON file.
+Follow the example below.
 
   ``` bash
   "PERFORMANCE_METRICS": {
-      "host": "host_test",
-      "port": 22,
-      "username": "test_user",
-      "private_key": "key",
-      "password": "pass_test"
+    "CPU": [
+        {
+            "label": "CPU label",
+            "host": "111111",
+            "port": 22,
+            "username": "test_user",
+            "private_key": "key_true",
+            "password": "15987"
+        }
+    ],
+    "RAM": [
+        {
+            "label": "RAM label",
+            "host": "111111",
+            "port": 22,
+            "username": "test_user",
+            "private_key": "key_true",
+            "password": "15987"
+        },
+        {
+            "label": "RAM label 2",
+            "host": "111111",
+            "port": 22,
+            "username": "test_user",
+            "private_key": "key_true",
+            "password": "15987"
+        }
+    ]
   }
   ```
 

@@ -1,3 +1,4 @@
 *.log
-cases/
+cases/*
 output/*
+*.csv

@@ -76,8 +76,8 @@ def loadParamsFromFileSelected(file):
                     BODY_DATA = str(
                         readData["BODY_DATA"]["json"]).replace("'", "\"")
             if "PERFORMANCE_METRICS" in readData:
-               global PERFORMANCE_METRICS
-               PERFORMANCE_METRICS = readData["PERFORMANCE_METRICS"]
+                global PERFORMANCE_METRICS
+                PERFORMANCE_METRICS = readData["PERFORMANCE_METRICS"]
 
             global OUTPUT_FILE_NAME
             OUTPUT_FILE_NAME = "{title}_{timeNow}".format(
@@ -117,6 +117,36 @@ def setHeaders(key, value):
     return header
 
 
+def addPerformanceMetricsProps(type, index, props):
+    print(index)
+    collection = ET.Element("collectionProp")
+    collection.set("name", str(index) + "_" + type)
+
+    for key, value in props.items():
+        prop = ET.Element("stringProp")
+        prop.set("name", key)
+        prop.text = str(value)
+        collection.append(prop)
+
+    if type == 'cpu':
+        prop = ET.Element("stringProp")
+        prop.set("name", "command")
+        prop.text = 'sar -u 1 1 | awk \'/^Average:/ {print 100-$8}\''
+    elif type == 'ram':
+        prop = ET.Element("stringProp")
+        prop.set("name", "command")
+        prop.text = 'free | grep Mem | awk \'{print 100 -($4/$2 * 100.0)}\''
+
+    collection.append(prop)
+
+    prop = ET.Element("stringProp")
+    prop.set("name", "delta")
+    prop.text = 'false'
+    collection.append(prop)
+
+    return collection
+
+
 # defineParams: Create a structure of folders for HTML Report or just .csv file
 # @params : isCreateHTMLReport - Works like a switch for choose the structure
 
@@ -135,13 +165,19 @@ def defineParams(tree, op):
                 header = setHeaders(key, value)
                 item.append(header)
         if PERFORMANCE_METRICS != {} and item.attrib['name'] == 'samplers':
-            for coll in item.iter('collectionProp'):
-                if coll.attrib['name'] == 'cpu':
-                    list(coll)[1].text = PERFORMANCE_METRICS["host"]
-                    list(coll)[2].text = str(PERFORMANCE_METRICS["port"])
-                    list(coll)[3].text = PERFORMANCE_METRICS["username"]
-                    list(coll)[4].text = PERFORMANCE_METRICS["private_key"]
-                    list(coll)[5].text = PERFORMANCE_METRICS["password"]
+            if "CPU" in PERFORMANCE_METRICS:
+                for props in PERFORMANCE_METRICS["CPU"]:
+                    index = PERFORMANCE_METRICS["CPU"].index(props)
+                    performanceProps = addPerformanceMetricsProps(
+                        'cpu', index, props)
+                    item.append(performanceProps)
+
+            if "RAM" in PERFORMANCE_METRICS:
+                for props in PERFORMANCE_METRICS["RAM"]:
+                    index = PERFORMANCE_METRICS["RAM"].index(props)
+                    performanceProps = addPerformanceMetricsProps(
+                        'ram', index, props)
+                    item.append(performanceProps)
 
     for item in root.iter('stringProp'):
         if item.attrib['name'] == "ThreadGroup.num_threads":
