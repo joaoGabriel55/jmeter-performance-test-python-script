@@ -11,10 +11,8 @@
     },
     "BODY_DATA": {
         "json": {
-            "value1": {
-                "type": "Property",
-                "value": "${random}"
-            }
+            "name": "tester",
+            "age": "36"
         }
     }
 }
